@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EASYPyME</title>
+    <style>
+        :root {
+            --primary-color: #6a0dad;
+            --secondary-color: #d8b4e2;
+            --background-color: #f8f2fc;
+            --text-color: #4a004d;
+            --button-hover: #8c36c1;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding-bottom: 60px; /* Margen inferior para evitar superposición con el footer */
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1.5em;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            margin: 0;
+            font-weight: bold;
+            font-style: italic;
+            font-family: 'Pacifico', cursive; /* Fuente atractiva */
+            color: white; /* Asegurar que el texto sea visible */
+        }
+
+        main {
+            padding: 2em;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+        }
+
+        h1, h2 {
+            color: var(--primary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2em;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        table, th, td {
+            border: 1px solid var(--secondary-color);
+        }
+
+        th, td {
+            padding: 1em;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1em 2em; /* Botón más grande */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 1.2em; /* Tamaño de fuente más grande */
+            display: inline-block;
+            margin-top: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: var(--button-hover);
+        }
+
+        .message {
+            text-align: center;
+            margin: 2em 0;
+            padding: 1.5em;
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border-radius: 10px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 0.5em; /* Reducir el padding */
+            background-color: white;
+            color: black;
+            font-weight: bold;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 0.9em; /* Reducir el tamaño de la fuente */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Sombra para separar visualmente */
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"> <!-- Fuente atractiva -->
+</head>
+<body>
+    <header>
+        <h1>EASYPyME</h1>
+    </header>
+    <main class="container">
+        <div id="app">
+            <!-- Contenido dinámico aquí -->
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 EASYPyME - Simplificando tu experiencia</p>
+    </footer>
+    <script>
+        const pymes = [
+            { id: 1, nombre: "EcoAventura Casanare", tipo: "Ecoturismo", ubicacion: "Yopal", precio: 150000, descripcion: "Tours por los Llanos Orientales." },
+            { id: 2, nombre: "Hato La Aurora", tipo: "Turismo Rural", ubicacion: "Paz de Ariporo", precio: 200000, descripcion: "Experiencia en hatos ganaderos." },
+            { id: 3, nombre: "Aguas Termales de Nunchía", tipo: "Turismo de Relax", ubicacion: "Nunchía", precio: 100000, descripcion: "Disfruta de aguas termales naturales." }
+        ];
+
+        const balance = {
+            ingresos: [
+                { concepto: "Recargo por PSE", monto: 250000, fecha: "2025-01-20" },
+                { concepto: "Recargo por PSE", monto: 300000, fecha: "2025-01-22" }
+            ],
+            egresos: [
+                { concepto: "Reserva EcoAventura Casanare", monto: 150000, fecha: "2025-01-21" },
+                { concepto: "Reserva Hato La Aurora", monto: 200000, fecha: "2025-01-23" }
+            ]
+        };
+
+        function calcularTotales() {
+            const totalIngresos = balance.ingresos.reduce((acc, item) => acc + item.monto, 0);
+            const totalEgresos = balance.egresos.reduce((acc, item) => acc + item.monto, 0);
+            const saldo = totalIngresos - totalEgresos;
+            return { totalIngresos, totalEgresos, saldo };
+        }
+
+        function renderInicio() {
+            const app = document.getElementById("app");
+            app.innerHTML = `
+                <h2>Explora las PYMES turísticas de Casanare</h2>
+                <ul>
+                    ${pymes.map(pyme => `
+                        <li>
+                            <a href="#" onclick="renderDetalle(${pyme.id})">${pyme.nombre}</a> - ${pyme.tipo} (${pyme.ubicacion})
+                        </li>
+                    `).join("")}
+                </ul>
+                <br>
+                <a href="#" class="button" onclick="renderBalance()">Ver Balance</a>
+            `;
+        }
+
+        function renderDetalle(id) {
+            const pyme = pymes.find(p => p.id === id);
+            const app = document.getElementById("app");
+            app.innerHTML = `
+                <h1>${pyme.nombre}</h1>
+                <p><strong>Tipo:</strong> ${pyme.tipo}</p>
+                <p><strong>Ubicación:</strong> ${pyme.ubicacion}</p>
+                <p><strong>Precio:</strong> $${pyme.precio} COP</p>
+                <p><strong>Descripción:</strong> ${pyme.descripcion}</p>
+                <a href="#" class="button" onclick="renderReservar(${pyme.id})">Reservar</a>
+                <br><br>
+                <a href="#" class="button" onclick="renderInicio()">Volver al inicio</a>
+            `;
+        }
+
+        function renderReservar(id) {
+            const pyme = pymes.find(p => p.id === id);
+            const app = document.getElementById("app");
+            app.innerHTML = `
+                <h1>Reservar en ${pyme.nombre}</h1>
+                <form onsubmit="confirmarReserva(event, ${id})">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                    <br>
+                    <label for="correo">Correo electrónico:</label>
+                    <input type="email" id="correo" name="correo" required>
+                    <br>
+                    <label for="fecha">Fecha de reserva:</label>
+                    <input type="date" id="fecha" name="fecha" required>
+                    <br>
+                    <button type="submit" class="button">Confirmar Reserva</button>
+                </form>
+                <br>
+                <a href="#" class="button" onclick="renderInicio()">Volver al inicio</a>
+            `;
+        }
+
+        function confirmarReserva(event, id) {
+            event.preventDefault();
+            const pyme = pymes.find(p => p.id === id);
+            const nombre = event.target.nombre.value;
+            const correo = event.target.correo.value;
+            const fecha = event.target.fecha.value;
+            const app = document.getElementById("app");
+            app.innerHTML = `
+                <div class="message">
+                    <p>¡Reserva confirmada!</p>
+                    <p>Reserva en <strong>${pyme.nombre}</strong> para el <strong>${fecha}</strong>.</p>
+                    <p>Hemos enviado los detalles a <strong>${correo}</strong>.</p>
+                </div>
+                <br>
+                <a href="#" class="button" onclick="renderInicio()">Volver al inicio</a>
+            `;
+        }
+
+        function renderBalance() {
+            const { totalIngresos, totalEgresos, saldo } = calcularTotales();
+            const app = document.getElementById("app");
+            app.innerHTML = `
+                <h1>Balance Financiero</h1>
+                <h2>Ingresos</h2>
+                <table>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
+                    </tr>
+                    ${balance.ingresos.map(item => `
+                        <tr>
+                            <td>${item.concepto}</td>
+                            <td>$${item.monto}</td>
+                            <td>${item.fecha}</td>
+                        </tr>
+                    `).join("")}
+                </table>
+                <h2>Egresos</h2>
+                <table>
+                    <tr>
+                        <th>Concepto</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
+                    </tr>
+                    ${balance.egresos.map(item => `
+                        <tr>
+                            <td>${item.concepto}</td>
+                            <td>$${item.monto}</td>
+                            <td>${item.fecha}</td>
+                        </tr>
+                    `).join("")}
+                </table>
+                <h2>Resumen</h2>
+                <p><strong>Total Ingresos:</strong> $${totalIngresos}</p>
+                <p><strong>Total Egresos:</strong> $${totalEgresos}</p>
+                <p><strong>Saldo:</strong> $${saldo}</p>
+                <a href="#" class="button" onclick="renderInicio()">Volver a inicio</a>
+            `;
+        }
+
+        renderInicio();
+    </script>
+</body>
+</html>
